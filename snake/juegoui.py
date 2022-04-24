@@ -137,7 +137,7 @@ class Game:
         self.display.blit(text, [0, 0])
         pygame.display.flip()
 
-    def generate_path(self):
+    def generar_camino(self):
         pass
 
     def generate_plot(self):
@@ -185,7 +185,7 @@ class Game:
                     pygame.quit()
                     quit()
 
-            self.direction = self.generate_path()
+            self.direction = self.generar_camino()
             if not self.direction:
                 return self.score
 
@@ -224,7 +224,7 @@ class Game:
                 self.score += 1
                 self.save_plot_data()
                 self.generate_food()
-                self.generate_path()
+                self.generar_camino()
             else:
                 self.snake.pop()
 

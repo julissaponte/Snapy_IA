@@ -6,22 +6,22 @@ class HillClimbing(Game):
     def __init__(self, game_type):
         Game.__init__(self, game_type)
 
-    def calculate_h(self, point):
+    def calcular_heuristica(self, point):
         return abs(self.food.x - point.x) + abs(self.food.y - point.y)
 
-    def generate_path(self):
-        neighbors = []
-        directions = [IZQUIERDA, DERECHA, ARRIBA, ABAJO]
-        for direction in directions:
-            neighbor = self.get_next_head(direction)
-            if not self.detect_random_point_collision(neighbor, 0):
-                neighbor.h = self.calculate_h(neighbor)
-                neighbors.append((neighbor, direction))
-        if neighbors:
-            current_h = self.calculate_h(self.head)
-            neighbor, direction = min(neighbors, key=lambda x: x[0].h)
-            if neighbor.h < current_h:
-                return direction
+    def generar_camino(self):
+        vecinos = []
+        direcciones = [IZQUIERDA, DERECHA, ARRIBA, ABAJO]
+        for direccion in direcciones:
+            vecino = self.get_next_head(direccion)
+            if not self.detect_random_point_collision(vecino, 0):
+                vecino.h = self.calcular_heuristica(vecino)
+                vecinos.append((vecino, direccion))
+        if vecinos:
+            current_h = self.calcular_heuristica(self.head)
+            vecino, direccion = min(vecinos, key=lambda x: x[0].h)
+            if vecino.h < current_h:
+                return direccion
         return None
 
 
@@ -30,51 +30,50 @@ class AStar(Game):
         Game.__init__(self, game_type)
         self.open = [self.head]
         self.closed = []
+        self.generar_camino()
 
-        self.generate_path()
-
-    def calculate_h(self, point):
+    def calcular_heuristica(self, point):
         return abs(self.food.x - point.x) + abs(self.food.y - point.y)
 
-    def generate_path(self):
+    def generar_camino(self):
         self.path = [self.head]
         self.closed = []
         self.open = [self.head]
         while self.open:
-            current = min(self.open, key=lambda x: x.f)
-            self.open = [self.open[i] for i in range(len(self.open)) if not self.open[i] == current]
-            self.closed.append(current)
-            if current == self.food:
-                while current.origin:
-                    self.path.append(current)
-                    current = current.origin
+            actual = min(self.open, key=lambda x: x.f)
+            self.open = [self.open[i] for i in range(len(self.open)) if not self.open[i] == actual]
+            self.closed.append(actual)
+            if actual == self.food:
+                while actual.origin:
+                    self.path.append(actual)
+                    actual = actual.origin
                 return
-            current.generate_neighbors()
-            for neighbor in current.neighbors:
+            actual.generate_neighbors()
+            for neighbor in actual.neighbors:
                 if neighbor not in self.obstacles and neighbor not in self.snake:
-                    g_temp = current.g + 1
+                    g_temp = actual.g + 1
                     if neighbor not in self.open and neighbor not in self.closed:
-                        neighbor.h = self.calculate_h(neighbor)
+                        neighbor.h = self.calcular_heuristica(neighbor)
                         neighbor.g = g_temp
                         neighbor.f = neighbor.g + neighbor.h
-                        neighbor.origin = current
+                        neighbor.origin = actual
                         self.open.append(neighbor)
                     else:
                         if neighbor in self.open:
                             old_neighbor = [x for x in self.open if x == neighbor][0]
                             if old_neighbor.g > g_temp:
-                                old_neighbor.h = self.calculate_h(neighbor)
+                                old_neighbor.h = self.calcular_heuristica(neighbor)
                                 old_neighbor.g = g_temp
                                 old_neighbor.f = neighbor.g + neighbor.h
-                                old_neighbor.origin = current
+                                old_neighbor.origin = actual
 
                         elif neighbor in self.closed:
                             old_neighbor = [x for x in self.closed if x == neighbor][0]
                             if old_neighbor.g > g_temp:
-                                old_neighbor.h = self.calculate_h(neighbor)
+                                old_neighbor.h = self.calcular_heuristica(neighbor)
                                 old_neighbor.g = g_temp
                                 old_neighbor.f = neighbor.g + neighbor.h
-                                old_neighbor.origin = current
+                                old_neighbor.origin = actual
                                 self.closed = [self.closed[i] for i in range(len(self.closed)) if
                                                not self.closed[i] == old_neighbor]
                                 self.open.append(old_neighbor)
