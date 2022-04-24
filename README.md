@@ -1,4 +1,4 @@
-# Snapy_IA
+# Snapy_IA :snake:
 Este es el repositorio para el Trabajo 1 del curso de Inteligencia Artificial
 
 Sección: SW71
@@ -16,10 +16,13 @@ Montoya Cubas, Carlos Fernando
 Abril, 2022
 
 ## Requisitos
+```
 ipython==8.2.0
-
 matplotlib==3.5.1
-
 pygame~=2.1.2
+```
 ## Modo de ejecución
-Ejecutar el archivo main.py
+Ejecutar el archivo 
+```
+main.py
+```
