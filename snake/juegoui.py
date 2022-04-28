@@ -69,18 +69,6 @@ class Juego:
         # Comida
         self.generar_comida()
 
-    def reset(self):
-        self.direction = ARRIBA
-        self.head = Punto(self.width / 2, self.height / 2)
-        self.snake = [self.head]
-        self.score = 0
-        self.obstacles = []
-        self.food = None
-        self.elapsed_times = []
-        self.scores = []
-        self.generar_obstaculos()
-        self.generar_comida()
-
     def generar_comida(self):
         x = random.randint(0, (self.width - TAMANIO_BLOQUE) // TAMANIO_BLOQUE) * TAMANIO_BLOQUE
         y = random.randint(0, (self.height - TAMANIO_BLOQUE) // TAMANIO_BLOQUE) * TAMANIO_BLOQUE
